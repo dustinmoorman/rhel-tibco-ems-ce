@@ -1,0 +1,145 @@
+---
+- hosts: rhel
+  tasks:
+    - name: Install required packages
+      yum:
+        name: "{{ required_packages }}"
+        state: present
+
+    - name: Create Machine Agent Directory
+      file:
+        path: "{{ machine_agent_directory }}"
+        state: directory
+        mode: "0755"
+
+    - name: Download & decompress AppDynamics Machine Agent
+      unarchive:
+        src: "{{ machine_agent_source }}"
+        dest: "{{ machine_agent_directory }}"
+        remote_src: yes
+
+    - name: Write controller host to Machine Agent configuration file
+      xml:
+        path: "{{ machine_agent_directory }}/conf/controller-info.xml"
+        xpath: /controller-info/controller-host
+        value: "{{ controller_host }}"
+
+    - name: Write controller port to Machine Agent configuration file
+      xml:
+        path: "{{ machine_agent_directory }}/conf/controller-info.xml"
+        xpath: /controller-info/controller-port
+        value: "{{ controller_port }}"
+
+    - name: Write application name to Machine Agent configuration file
+      xml:
+        path: "{{ machine_agent_directory }}/conf/controller-info.xml"
+        xpath: /controller-info/application-name
+        value: "{{ application_name }}"
+
+    - name: Write tier name to Machine Agent configuration file
+      xml:
+        path: "{{ machine_agent_directory }}/conf/controller-info.xml"
+        xpath: /controller-info/tier-name
+        value: "{{ tier_name }}"
+
+    - name: Write Server Visibility Monitoring setting to Machine Agent configuration file
+      xml:
+        path: "{{ machine_agent_directory }}/conf/controller-info.xml"
+        xpath: /controller-info/sim-enabled
+        value: "{{ server_visibility_enabled }}"
+
+    - name: Write account name to Machine Agent configuration file
+      xml:
+        path: "{{ machine_agent_directory }}/conf/controller-info.xml"
+        xpath: /controller-info/account-name
+        value: "{{ account_name }}"
+
+    - name: Write account access key to Java Agent configuration file
+      xml:
+        path: "{{ machine_agent_directory }}/conf/controller-info.xml"
+        xpath: /controller-info/account-access-key
+        value: "{{ account_access_key }}"
+
+    - name: Configure Machine Agent in systemd
+      shell: |
+        cat << EOF > "/lib/systemd/system/{{ machine_agent_systemd_service_name }}.service"
+        [Unit]
+        Description=AppDynamics Machine Agent
+
+        [Service]
+        ExecStart={{ machine_agent_directory }}/jre/bin/java -jar {{ machine_agent_directory }}/machineagent.jar
+        KillMode=control-group
+        Restart=on-failure
+        RestartPreventExitStatus=255
+        Type=simple
+        TimeoutSec=900
+
+        [Install]
+        WantedBy=multi-user.target
+        Alias={{ machine_agent_systemd_service_name}}.service
+        EOF
+      args:
+        creates: "/lib/systemd/system/{{ machine_agent_systemd_service_name }}.service"
+
+    - name: Create Network Agent Directory
+      file:
+        path: "{{ netviz_agent_directory }}"
+        state: directory
+        mode: "0755"
+
+    - name: Download & decompress AppDynamics Network Agent
+      unarchive:
+        src: "{{ netviz_agent_source }}"
+        dest: "{{ netviz_agent_directory }}"
+        remote_src: yes
+
+    - name: Install AppDynamics Network Agent
+      shell: |
+        bash -c "{{ netviz_agent_directory }}/install.sh"
+        touch "{{ netviz_agent_directory }}/netviz.installed"
+      args:
+        creates: "{{ netviz_agent_directory }}/netviz.installed"
+
+    - name: Configure Network Agent in systemd
+      shell: |
+        cat << EOF > "/lib/systemd/system/{{ netviz_agent_systemd_service_name }}.service"
+        [Unit]
+        Description=AppDynamics Network Agent
+        After=network.target
+
+        [Service]
+        ExecStart={{ netviz_agent_directory }}/bin/start.sh
+        KillMode=control-group
+        Restart=always
+        RestartPreventExitStatus=255
+        Type=forking
+        TimeoutSec=900
+
+        [Install]
+        WantedBy=multi-user.target
+        Alias={{ netviz_agent_systemd_service_name}}.service
+        EOF
+      args:
+        creates: "/lib/systemd/system/{{ netviz_agent_systemd_service_name }}.service"
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Start Machine Agent service
+      service:
+        name: "{{ machine_agent_systemd_service_name }}"
+        enabled: true
+        state: restarted
+
+    - name: Start Network Agent service
+      service:
+        name: "{{ netviz_agent_systemd_service_name }}"
+        enabled: true
+        state: restarted
+
+    - name: Start Database Agent service
+      service:
+        name: "{{ database_agent_systemd_service_name }}"
+        enabled: true
+        state: restarted
