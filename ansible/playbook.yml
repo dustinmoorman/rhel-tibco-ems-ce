@@ -137,3 +137,12 @@
         name: "{{ netviz_agent_systemd_service_name }}"
         enabled: true
         state: restarted
+
+    - name: Send local download of Tibco EMS CE to Server
+      copy:
+        src: "{{ tibco_ems_ce_local_source }}"
+        dest: "{{ tibco_installer_directory }}"
+        owner: ec2-user
+        group: ec2-user
+        mode: '0744'
+        force: yes 
