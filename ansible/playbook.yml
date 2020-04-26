@@ -153,8 +153,21 @@
         mode: '0744'
         force: yes 
 
+    - name: Create Tibco installer directory
+      file:
+        path: "{{ tibco_installer_directory }}/tibco-ems-ce"
+        state: directory
+        mode: "0755"
+
     - name: Unzip Tibco EMS CE
       unarchive:
         src: "{{ tibco_installer_directory }}/{{ tibco_ems_installer_version }}.zip"
         dest: "{{ tibco_installer_directory }}/tibco-ems-ce/"
         remote_src: yes
+
+    - name: Install Tibco EMS CE RPMs
+      shell: |
+        cd "{{ tibco_installer_directory }}/tibco-ems-ce/{{ tibco_ems_installer_unpacked_version_dir }}"
+        yum install -y rpm/*.rpm
+      args:
+        creates: /opt/tibco
