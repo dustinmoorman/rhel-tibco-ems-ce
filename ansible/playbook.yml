@@ -138,6 +138,12 @@
         enabled: true
         state: restarted
 
+    - name: Create Tibco installer directory
+      file:
+        path: "{{ tibco_installer_directory }}"
+        state: directory
+        mode: "0755"
+
     - name: Send local download of Tibco EMS CE to Server
       copy:
         src: "{{ tibco_ems_ce_local_source }}"
@@ -146,3 +152,9 @@
         group: ec2-user
         mode: '0744'
         force: yes 
+
+    - name: Unzip Tibco EMS CE
+      unarchive:
+        src: "{{ tibco_installer_directory }}/{{ tibco_ems_installer_version }}.zip"
+        dest: "{{ tibco_installer_directory }}/tibco-ems-ce/"
+        remote_src: yes

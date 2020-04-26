@@ -3,6 +3,7 @@
   "controller_host": "",
   "required_packages": [
     "python3-lxml",
+    "vim",
     "wget",
     "unzip"
   ],
@@ -20,5 +21,9 @@
   "netviz_agent_directory": "/opt/appdynamics/networkvisibility",
   "netviz_agent_systemd_service_name": "appd-netviz-agent",
   "application_name": "rhel-tibco-ems-ce",
-  "appdynamics_dir": "/opt/appdynamics"
+  "appdynamics_dir": "/opt/appdynamics",
+  "tibco_ems_ce_local_source": "",
+  "tibco_installer_directory": "",
+  "tibco_ems_installer_version": "",
+  "tibco_ems_installer_unpacked_version_dir": "",
 }
