@@ -304,13 +304,13 @@
           file=meta.db
           mode=async
           file_crc=true
-        
+
         [$sys.nonfailsafe]
           type=file
           file=async-msgs.db
           mode=async
           file_crc=true
-        
+
         [$sys.failsafe]
           type=file
           file=sync-msgs.db
