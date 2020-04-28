@@ -110,21 +110,10 @@
       args:
         creates: "/lib/systemd/system/{{ netviz_agent_systemd_service_name }}.service"
 
-    - name: Reload systemd
-      systemd:
-        daemon_reload: yes
-
-    - name: Start Machine Agent service
-      service:
-        name: "{{ machine_agent_systemd_service_name }}"
-        enabled: true
-        state: restarted
-
-    - name: Start Network Agent service
-      service:
-        name: "{{ netviz_agent_systemd_service_name }}"
-        enabled: true
-        state: restarted
+    - name: Create Tibco Group
+      group:
+        name: tibco
+        state: present
 
     - name: Create Tibco tibuser
       user:
@@ -408,6 +397,7 @@
         owner: tibuser
         group: tibco
         mode: "0755"
+        recurse: yes
 
     - name: Configure Tibco EMS in systemd
       shell: |
@@ -432,3 +422,25 @@
         EOF
       args:
         creates: "/lib/systemd/system/{{ tibco_ems_systemd_service_name }}.service"
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Start Machine Agent service
+      service:
+        name: "{{ machine_agent_systemd_service_name }}"
+        enabled: true
+        state: restarted
+
+    - name: Start Network Agent service
+      service:
+        name: "{{ netviz_agent_systemd_service_name }}"
+        enabled: true
+        state: restarted
+
+    - name: Start Tibco EMS service
+      service:
+        name: "{{ tibco_ems_systemd_service_name }}"
+        enabled: true
+        state: restarted
