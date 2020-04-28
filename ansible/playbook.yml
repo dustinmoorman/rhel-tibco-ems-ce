@@ -278,3 +278,8 @@
             network =
             daemon  =
         EOF
+
+    - name: Write channels.conf to config directory
+      shell: |
+        cat << EOF > "{{ tibco_config_directory }}/channels.conf"
+        EOF
