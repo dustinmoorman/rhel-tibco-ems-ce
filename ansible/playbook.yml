@@ -178,4 +178,90 @@
         state: directory
         mode: "0755"
 
+    - name: Write tibemsd.conf to config directory
+      shell: |
+        cat << EOF > "{{ tibco_config_directory }}/tibemsd.conf"
+        server                  = EMS-SERVER
+        password                = "{{ tibco_ems_password }}"
+        users                   = "{{ tibco_config_directory }}/users.conf"
+        groups                  = "{{ tibco_config_directory }}/groups.conf"
+        topics                  = "{{ tibco_config_directory }}/topics.conf"
+        queues                  = "{{ tibco_config_directory }}/queues.conf"
+        acl_list                = "{{ tibco_config_directory }}/acl.conf"
+        factories               = "{{ tibco_config_directory }}/factories.conf"
+        routes                  = "{{ tibco_config_directory }}/routes.conf"
+        bridges                 = "{{ tibco_config_directory }}/bridges.conf"
+        transports              = "{{ tibco_config_directory }}/transports.conf"
+        tibrvcm                 = "{{ tibco_config_directory }}/tibrvcm.conf"
+        durables                = "{{ tibco_config_directory }}/durables.conf"
+        channels                = "{{ tibco_config_directory }}/channels.conf"
+        stores                  = "{{ tibco_config_directory }}/stores.conf"
+        store                   = datastore
+        max_connections         = 0
+        max_msg_memory          = 512MB
+        msg_swapping            = enabled
+        listen                  = tcp://7222
+        health_check_listen     =
+        authorization           = disabled
+        routing                 = disabled
+        flow_control            = disabled
+        multicast               = disabled
+        tibftl_transports =
+        tibrv_transports  =
+        ftl_url                 =
+        ftl_url_secondary       =
+        ftl_username            =
+        ftl_password            =
+        ftl_log_level           =
+        ftl_discard_policy      =
+        ftl_discard_amount      =
+        ftl_discard_max_events  =
+        logfile                 =
+        logfile_max_size        =
+        log_trace               =
+        console_trace           =
+        server_rate_interval        = 1
+        statistics                  = enabled
+        rate_interval               = 3
+        detailed_statistics         = NONE
+        statistics_cleanup_interval = 30
+        max_stat_memory             = 64MB
+        track_message_ids       =
+        track_correlation_ids   =
+        ft_active               =
+        ft_heartbeat            =
+        ft_activation           =
+        ft_reconnect_timeout    =
+        ft_ssl_identity         =
+        ft_ssl_issuer           =
+        ft_ssl_private_key      =
+        ft_ssl_password         =
+        ft_ssl_trusted          =
+        ft_ssl_verify_host      =
+        ft_ssl_verify_hostname  =
+        ft_ssl_expected_hostname=
+        ft_ssl_ciphers          =
+        module_path             =
+        ssl_dh_size             =
+        ssl_server_ciphers      =
+        ssl_require_client_cert =
+        ssl_require_route_cert_only =
+        ssl_use_cert_username   =
+        ssl_cert_user_specname  = CERTIFICATE_USER
+        ssl_server_identity     =
+        ssl_server_key          =
+        ssl_password            =
+        ssl_server_issuer       =
+        ssl_server_trusted      =
+        EOF
+      args:
+        creates: "{{ tibco_config_directory }}/tibemsd.conf"
 
+
+#    - name: Write tibemsd.conf to config directory
+#      shell: |
+#        cat << EOF > "{{ tibco_config_directory }}/tibemsd.conf"
+#        
+#        EOF
+#      args:
+#        creates: "{{ tibco_config_directory }}/tibemsd.conf"
