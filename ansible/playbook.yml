@@ -283,3 +283,46 @@
       shell: |
         cat << EOF > "{{ tibco_config_directory }}/channels.conf"
         EOF
+
+    - name: Write acl.conf to config directory
+      shell: |
+        cat << EOF > "{{ tibco_config_directory }}/acl.conf"
+        EOF
+
+    - name: Write routes.conf to config directory
+      shell: |
+        cat << EOF > "{{ tibco_config_directory }}/routes.conf"
+        [EMS-SERVER2]
+          url=tcp://7022
+        EOF
+
+    - name: Write stores.conf to config directory
+      shell: |
+        cat << EOF > "{{ tibco_config_directory }}/stores.conf"
+        [$sys.meta]
+          type=file
+          file=meta.db
+          mode=async
+          file_crc=true
+        
+        [$sys.nonfailsafe]
+          type=file
+          file=async-msgs.db
+          mode=async
+          file_crc=true
+        
+        [$sys.failsafe]
+          type=file
+          file=sync-msgs.db
+          mode=sync
+          file_crc=true
+        EOF
+
+    - name: Write queues.conf to config directory
+      shell: |
+        cat << EOF > "{{ tibco_config_directory }}/queues.conf"
+        >
+        sample
+
+        queue.sample
+        EOF
