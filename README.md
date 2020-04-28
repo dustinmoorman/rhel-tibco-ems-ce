@@ -2,6 +2,8 @@
 
 This repository is intended to provide a base Tibco EMS CE installation for a RHEL 7 instance, for use in development and testing.  The instance will come with the AppDynamics Machine agent and Network Visibility agent installed.
 
+**NOTE: This is not intended to be a production deployment of Tibco EMS, it is intended to be a development playground environment for proof of concepts.**
+
 # Requirements
 
 1. Rename `ansible/inventory.ini.dist` & `ansible/variables.json.dist` to drop the `.dist` suffix.
