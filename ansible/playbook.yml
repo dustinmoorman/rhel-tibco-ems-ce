@@ -171,3 +171,11 @@
         yum install -y rpm/*.rpm
       args:
         creates: /opt/tibco
+
+    - name: Create Tibco config directory
+      file:
+        path: "{{ tibco_config_directory }}"
+        state: directory
+        mode: "0755"
+
+

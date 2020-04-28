@@ -26,4 +26,5 @@
   "tibco_installer_directory": "",
   "tibco_ems_installer_version": "",
   "tibco_ems_installer_unpacked_version_dir": "",
+  "tibco_config_directory": "/opt/tibco/config"
 }
