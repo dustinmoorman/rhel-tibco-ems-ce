@@ -407,11 +407,11 @@
 
         [Service]
         WorkingDirectory=/opt/tibco/data
-        ExecStart=../ems/8.5/bin/tibemsd -config /opt/tibco/config/tibemsd.conf
+        ExecStart=/opt/tibco/ems/8.5/bin/tibemsd -config /opt/tibco/config/tibemsd.conf
         KillMode=control-group
         Restart=on-failure
         RestartPreventExitStatus=255
-        Type=forking
+        Type=simlpe
         TimeoutSec=900
         User=tibuser
         Group=tibco
