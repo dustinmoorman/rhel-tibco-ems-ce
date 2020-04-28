@@ -166,6 +166,12 @@
         state: directory
         mode: "0755"
 
+    - name: Create Tibco datastore local directory
+      file:
+        path: "{{ tibco_datastore_local_directory }}"
+        state: directory
+        mode: "0755"
+
     - name: Write tibemsd.conf to config directory
       shell: |
         cat << EOF > "{{ tibco_config_directory }}/tibemsd.conf"
@@ -184,7 +190,7 @@
         durables                = "{{ tibco_config_directory }}/durables.conf"
         channels                = "{{ tibco_config_directory }}/channels.conf"
         stores                  = "{{ tibco_config_directory }}/stores.conf"
-        store                   = datastore
+        store                   = local
         max_connections         = 0
         max_msg_memory          = 512MB
         msg_swapping            = enabled
@@ -289,6 +295,11 @@
         cat << EOF > "{{ tibco_config_directory }}/acl.conf"
         EOF
 
+    - name: Write bridges.conf to config directory
+      shell: |
+        cat << EOF > "{{ tibco_config_directory }}/bridges.conf"
+        EOF
+
     - name: Write factories.conf to config directory
       shell: |
         cat << EOF > "{{ tibco_config_directory }}/factories.conf"
@@ -348,19 +359,19 @@
         cat << EOF > "{{ tibco_config_directory }}/stores.conf"
         [$sys.meta]
           type=file
-          file=meta.db
+          file="{{ tibco_datastore_local_directory }}/meta.db"
           mode=async
           file_crc=true
 
         [$sys.nonfailsafe]
           type=file
-          file=async-msgs.db
+          file="{{ tibco_datastore_local_directory }}/async-msgs.db"
           mode=async
           file_crc=true
 
         [$sys.failsafe]
           type=file
-          file=sync-msgs.db
+          file="{{ tibco_datastore_local_directory }}/sync-msgs.db"
           mode=sync
           file_crc=true
         EOF

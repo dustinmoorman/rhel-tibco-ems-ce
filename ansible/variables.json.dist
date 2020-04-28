@@ -27,5 +27,6 @@
   "tibco_ems_installer_version": "",
   "tibco_ems_installer_unpacked_version_dir": "",
   "tibco_config_directory": "/opt/tibco/config",
+  "tibco_datastore_local_directory": "/opt/tibco/data/local",
   "tibco_ems_password": "appdynam1cs"
 }
