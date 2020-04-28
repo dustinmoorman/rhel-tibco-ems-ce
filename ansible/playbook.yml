@@ -300,6 +300,16 @@
         cat << EOF > "{{ tibco_config_directory }}/bridges.conf"
         EOF
 
+    - name: Write tibrvcm.conf to config directory
+      shell: |
+        cat << EOF > "{{ tibco_config_directory }}/tibrvcm.conf"
+        EOF
+
+    - name: Write durables.conf to config directory
+      shell: |
+        cat << EOF > "{{ tibco_config_directory }}/durables.conf"
+        EOF
+
     - name: Write factories.conf to config directory
       shell: |
         cat << EOF > "{{ tibco_config_directory }}/factories.conf"
