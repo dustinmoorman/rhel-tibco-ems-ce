@@ -255,7 +255,18 @@
       shell: |
         cat << EOF > "{{ tibco_config_directory }}/groups.conf"
         $admin:"Administrators"
-          admin        
+          admin
+        EOF
+
+    - name: Write topics.conf to config directory
+      shell: |
+        cat << EOF > "{{ tibco_config_directory }}/topics.conf"
+        >
+        topic.sample.exported   export=RV
+        topic.sample.imported   import=RV
+
+        sample
+        topic.sample
         EOF
 
 #    - name: Write tibemsd.conf to config directory
