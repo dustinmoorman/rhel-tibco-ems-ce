@@ -289,6 +289,53 @@
         cat << EOF > "{{ tibco_config_directory }}/acl.conf"
         EOF
 
+    - name: Write factories.conf to config directory
+      shell: |
+        cat << EOF > "{{ tibco_config_directory }}/factories.conf"
+        [ConnectionFactory]
+          type                  = generic
+          url                   = tcp://7222
+        
+        [FTConnectionFactory]
+          type                  = generic
+          url                   = tcp://localhost:7222,tcp://localhost:7224
+        
+        [SSLConnectionFactory]
+          type                  = generic
+          url                   = ssl://7243
+          ssl_verify_host       = disabled
+        
+        [GenericConnectionFactory]
+          type                  = generic
+          url                   = tcp://7222
+        
+        [TopicConnectionFactory]
+          type                  = topic
+          url                   = tcp://7222
+        
+        [QueueConnectionFactory]
+          type                  = queue
+          url                   = tcp://7222
+        
+        [FTTopicConnectionFactory]
+          type                  = topic
+          url                   = tcp://localhost:7222,tcp://localhost:7224
+        
+        [FTQueueConnectionFactory]
+          type                  = queue
+          url                   = tcp://localhost:7222,tcp://localhost:7224
+        
+        [SSLQueueConnectionFactory]
+          type                  = queue
+          url                   = ssl://7243
+          ssl_verify_host       = disabled
+        
+        [SSLTopicConnectionFactory]
+          type                  = topic
+          url                   = ssl://7243
+          ssl_verify_host       = disabled
+        EOF
+
     - name: Write routes.conf to config directory
       shell: |
         cat << EOF > "{{ tibco_config_directory }}/routes.conf"
