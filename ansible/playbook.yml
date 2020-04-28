@@ -126,6 +126,12 @@
         enabled: true
         state: restarted
 
+    - name: Create Tibco tibuser
+      user:
+        name: tibuser
+        comment: Tibco User for EMS
+        group: tibco
+
     - name: Create Tibco installer directory
       file:
         path: "{{ tibco_installer_directory }}"
@@ -394,3 +400,35 @@
 
         queue.sample
         EOF
+
+    - name: Set permissions on Tibco directory
+      file: 
+        path: /opt/tibco
+        state: directory
+        owner: tibuser
+        group: tibco
+        mode: "0755"
+
+    - name: Configure Tibco EMS in systemd
+      shell: |
+        cat << EOF > "/lib/systemd/system/{{ tibco_ems_systemd_service_name }}.service"
+        [Unit]
+        Description=Tibco EMS
+
+        [Service]
+        WorkingDirectory=/opt/tibco/data
+        ExecStart=../ems/8.5/bin/tibemsd -config /opt/tibco/config/tibemsd.conf
+        KillMode=control-group
+        Restart=on-failure
+        RestartPreventExitStatus=255
+        Type=forking
+        TimeoutSec=900
+        User=tibuser
+        Group=tibco
+
+        [Install]
+        WantedBy=multi-user.target
+        Alias={{ tibco_ems_systemd_service_name }}.service
+        EOF
+      args:
+        creates: "/lib/systemd/system/{{ tibco_ems_systemd_service_name }}.service"
